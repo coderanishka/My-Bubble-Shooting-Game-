@@ -34,6 +34,7 @@ function draw(){
   }
   if(bulletGroup.isTouching(StarGroup)){
     StarGroup.destroyEach();
+    score++;
   }
  
   if(life <= 0){
