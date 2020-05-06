@@ -1,6 +1,6 @@
 var bullet;
 var player;
-var starGroup;
+var starGroup, bulletGroup;
 var score = 0;
 var life = 300;
 
@@ -18,7 +18,7 @@ function setup(){
    player = createSprite(400,400,50,50);
    player.addImage(player1);
    player.scale = 2;
-
+   bulletGroup=new Group();
    StarGroup = new Group();
 }
  
@@ -27,12 +27,15 @@ function setup(){
 function draw(){
   background(0);
   
-  drawSprites();
+ 
   spawnStars();
   if(StarGroup.isTouching(player)){
     life--;
   }
-
+  if(bulletGroup.isTouching(StarGroup)){
+    StarGroup.destroyEach();
+  }
+ 
   if(life <= 0){
     textSize(80);
     fill(255);
@@ -46,8 +49,11 @@ function draw(){
   textSize(30);
   text("Score : " + score, 30,40);
   text("Life : " + life, 30,80);
+  drawSprites();
 }
 
+
+  
 
 function keyReleased(){
   
@@ -56,9 +62,8 @@ function keyReleased(){
     bullet = createSprite(400,400,5,30);
     bullet.velocityY = -9;
     bullet.shapeColor="purple";
-    if(bullet.isTouching(StarGroup)){
-    StarGroup.collide( bullet, explosion);
-    }
+    bulletGroup.add(bullet);
+    
   }
 
   if(keyCode === DOWN_ARROW){
@@ -66,9 +71,8 @@ function keyReleased(){
     bullet = createSprite(400,400,5,30);
     bullet.velocityY = 9;
     bullet.shapeColor="purple";
-    if(bullet.isTouching(StarGroup)){
-      StarGroup.collide( bullet, explosion);
-    } 
+    bulletGroup.add(bullet);
+   
   }
 
   if(keyCode === RIGHT_ARROW){
@@ -76,9 +80,8 @@ function keyReleased(){
     bullet = createSprite(400,400,30,5);
     bullet.velocityX = 9;
     bullet.shapeColor="purple";
-    if(bullet.isTouching(StarGroup)){
-      StarGroup.collide( bullet, explosion);
-    } 
+    bulletGroup.add(bullet);
+  
   }
 
   if(keyCode === LEFT_ARROW){
@@ -86,15 +89,11 @@ function keyReleased(){
     bullet = createSprite(400,400,30,5);
     bullet.velocityX = -9;
     bullet.shapeColor="purple";
-    if(bullet.isTouching(StarGroup)){
-      StarGroup.collide( bullet, explosion);
-    } 
+    bulletGroup.add(bullet);
+  
   }
 }
 
-function explosion(StarGroup, bullet) {
-  StarGroup.remove();
-}
 
 function spawnStars(){
 if (frameCount%30===0){
